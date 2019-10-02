@@ -45,7 +45,9 @@
 
     export default {
         name: 'UbiCalendar',
-        props: {},
+        props: {
+            value: Array,
+        },
         filters: {
             dayOfMonth: function (givenDate) {
                 if (!givenDate) return '';
@@ -145,18 +147,23 @@
                 }
             }
 
+        },
+        watch: {
+            selectedDates: function () {
+                this.$emit('input', this.selectedDates);
+            }
         }
     }
 </script>
 
 <style scoped>
     .calendar {
-        margin-top:40px;
+        margin-top: 40px;
         width: 400px;
         user-select: none;
         border-radius: 5px;
         border: 1px solid lightgray;
-        box-shadow: 0 2px 180px 0 rgba(0,0,0,.2);
+        box-shadow: 0 2px 180px 0 rgba(0, 0, 0, .2);
     }
 
     .header {
@@ -210,6 +217,7 @@
     .dates div:hover {
         background: #ccc;
     }
+
     .dates .selected {
         background: deepskyblue;
         color: white;
