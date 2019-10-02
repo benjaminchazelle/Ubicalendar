@@ -12,14 +12,17 @@
                 </select>
             </label>
             <label>
-                <select>
-                    <option>actions</option>
+                <select v-model="quickSelection" @change="quickSelect()">
+                    <option value="">-- Sélection rapide --</option>
+                    <option v-for="(weekday, index) in weekdays" :key="index" :value="index" @click="">
+                        Tous les {{weekday}} du mois {{index}}
+                    </option>
                 </select>
             </label>
         </div>
         <div class="weekdays">
-            <div v-for="(weekday, index) in weekdays" :key="index">
-                {{weekday}}
+            <div v-for="(weekdayMin, index) in weekdaysMin" :key="index">
+                {{weekdayMin}}
             </div>
         </div>
         <div class="dates">
@@ -50,9 +53,12 @@
                 currentYear: 2019,
 
                 months: moment.months(),
-                weekdays: moment.weekdaysMin(true),
+                weekdays: moment.weekdays(true),
+                weekdaysMin: moment.weekdaysMin(true),
 
-                selectedDates: []
+                selectedDates: [],
+
+                quickSelection: ""
             }
         },
         computed: {
@@ -97,6 +103,24 @@
             },
             isSelectedDate: function (givenDate) {
                 return this.selectedDates.findIndex((date) => moment(date).isSame(givenDate)) !== -1;
+            },
+            quickSelect: function () {
+
+                if(this.quickSelection === "") {
+                    return;
+                }
+
+                let timeReference = new Date(this.currentYear, this.currentMonth);
+
+                let from = moment(timeReference).startOf('month');
+                let to = moment(timeReference).endOf('month');
+
+                for (let currentDate = from; currentDate.isBefore(to) || currentDate.isSame(to); currentDate.add(1, 'days')) {
+                    let dayIndex = (this.quickSelection+1)%7;
+                    if(currentDate.toDate().getDay() === dayIndex && this.selectedDates.findIndex((date) => moment(date).isSame(currentDate)) === -1) {
+                        this.selectedDates.push(currentDate.toDate());
+                    }
+                }
             }
 
         }
