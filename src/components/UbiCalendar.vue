@@ -28,9 +28,9 @@
             </div>
         </div>
         <div class="dates">
-            <div v-for="(date, index) in dates" :key="index" :class="{selected: isSelectedDate(date)}"
+            <div v-for="(date, index) in dates" :key="index" :class="{selected: isSelectedDate(date), out: isOutOfMonth(date)}"
                  @click="toggleDateSelection($event, date)" @mouseenter="toggleDateSelection($event, date)">
-                {{date | dayOfMonth}}
+                {{date | dayOfMonth}}<span v-if="isOutOfMonth(date)">/{{date | monthNumber}}</span>
             </div>
         </div>
     </div>
@@ -49,6 +49,10 @@
             dayOfMonth: function (givenDate) {
                 if (!givenDate) return '';
                 return moment(givenDate).format('D');
+            },
+            monthNumber: function (givenDate) {
+                if (!givenDate) return '';
+                return moment(givenDate).format('M');
             },
             capitalize: function (value) {
                 if (!value) return '';
@@ -113,6 +117,14 @@
             isSelectedDate: function (givenDate) {
                 return this.selectedDates.findIndex((date) => moment(date).isSame(givenDate)) !== -1;
             },
+            isOutOfMonth: function (givenDate) {
+                let timeReference = new Date(this.currentYear, this.currentMonth);
+
+                let from = moment(timeReference).startOf('month');
+                let to = moment(timeReference).endOf('month');
+
+                return !moment(givenDate).isBetween(from, to, null, "[]");
+            },
             quickSelect: function () {
 
                 if (this.quickSelection === "") {
@@ -139,7 +151,6 @@
 <style scoped>
     .calendar {
         width: 400px;
-        height: 400px;
         border: 1px solid;
         user-select: none;
     }
@@ -178,6 +189,10 @@
     .dates .selected {
         background: deepskyblue;
         color: white;
+    }
+
+    .dates .out {
+        color: lightgray;
     }
 
 
