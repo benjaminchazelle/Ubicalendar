@@ -18,31 +18,14 @@
             </label>
         </div>
         <div class="weekdays">
-            <div>Lu</div>
-            <div>Lu</div>
-            <div>Lu</div>
-            <div>Lu</div>
-            <div>Lu</div>
-            <div>Lu</div>
-            <div>Lu</div>
-            <div>Lu</div>
+            <div v-for="(weekday, index) in weekdays" :key="index">
+                {{weekday}}
+            </div>
         </div>
         <div class="dates">
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
+            <div v-for="(date, index) in dates" :key="index">
+                {{date | dayOfMonth}}
+            </div>
         </div>
     </div>
 </template>
@@ -56,13 +39,18 @@
     export default {
         name: 'UbiCalendar',
         props: {},
+        filters: {
+            dayOfMonth: function (givenDate) {
+                return moment(givenDate).format('D');
+            }
+        },
         data: function () {
             return {
                 currentMonth: 9, //TODO: rendre dynamique
                 currentYear: 2019,
 
                 months: moment.months(),
-                weekdays: moment.weekdays(),
+                weekdays: moment.weekdaysMin(true),
             }
         },
         computed: {
@@ -70,10 +58,24 @@
                 let years = [];
                 let from = new Date().getFullYear() - 10;
                 let to = new Date().getFullYear() + 10;
-                for(let year = from; year <= to; year++) {
+                for (let year = from; year <= to; year++) {
                     years.push(year);
                 }
                 return years;
+            },
+            dates: function () {
+                let timeReference = new Date(this.currentYear, this.currentMonth);
+
+                let from = moment(timeReference).startOf('month').startOf('week');
+                let to = moment(timeReference).endOf('month').endOf('week');
+
+                let dates = [];
+
+                for (let currentDate = from; currentDate.isBefore(to) || currentDate.isSame(to); currentDate.add(1, 'days')) {
+                    dates.push(currentDate.toDate());
+                }
+
+                return dates;
             }
         }
     }
@@ -81,9 +83,9 @@
 
 <style scoped>
     .calendar {
-        width:400px;
-        height:400px;
-        border:1px solid;
+        width: 400px;
+        height: 400px;
+        border: 1px solid;
     }
 
     .header {
@@ -98,8 +100,8 @@
 
     .header select {
         flex: 1;
-        height:40px;
-        line-height:40px;
+        height: 40px;
+        line-height: 40px;
     }
 
     .weekdays, .dates {
@@ -109,8 +111,8 @@
     .weekdays div, .dates div {
         width: 14.28%;
         text-align: center;
-        height:40px;
-        line-height:40px;
+        height: 40px;
+        line-height: 40px;
     }
 
     .dates {
