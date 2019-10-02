@@ -16,6 +16,7 @@
             <label>
                 <select v-model="quickSelection" @change="quickSelect()">
                     <option value="">-- Sélection rapide --</option>
+                    <option value="reset">Tout déselectionner</option>
                     <option v-for="(weekday, index) in weekdays" :key="index" :value="index">
                         Tous les {{weekday}}s du mois {{index}}
                     </option>
@@ -134,6 +135,12 @@
                     return;
                 }
 
+                if (this.quickSelection === "reset") {
+                    this.selectedDates = [];
+                    this.quickSelection = "";
+                    return;
+                }
+
                 let timeReference = new Date(this.currentYear, this.currentMonth);
 
                 let from = moment(timeReference).startOf('month');
@@ -145,6 +152,8 @@
                         this.selectedDates.push(currentDate.toDate());
                     }
                 }
+
+                this.quickSelection = "";
             }
 
         },
