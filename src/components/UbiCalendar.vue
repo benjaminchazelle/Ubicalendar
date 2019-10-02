@@ -49,8 +49,8 @@
         },
         data: function () {
             return {
-                currentMonth: 9, //TODO: rendre dynamique
-                currentYear: 2019,
+                currentMonth: new Date().getMonth(),
+                currentYear: new Date().getFullYear(),
 
                 months: moment.months(),
                 weekdays: moment.weekdays(true),
