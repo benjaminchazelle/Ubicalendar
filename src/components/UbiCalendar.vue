@@ -5,6 +5,7 @@
                 <select>
                     <option>mois</option>
                 </select>
+                {{ currentMonth }}
             </label>
             <label>
                 <select>
@@ -48,9 +49,20 @@
 </template>
 
 <script>
+
+    import moment from 'moment';
+
+    moment.locale('fr');
+
     export default {
         name: 'UbiCalendar',
-        props: {}
+        props: {},
+        data: function () {
+            return {
+                currentMonth: 9,
+                currentYear: 2019
+            }
+        }
     }
 </script>
 
