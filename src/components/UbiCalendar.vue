@@ -3,7 +3,9 @@
         <div class="header">
             <label>
                 <select v-model="currentMonth">
-                    <option v-for="(month, index) in months" :key="index" :value="index">{{month}}</option>
+                    <option v-for="(month, index) in months" :key="index" :value="index">
+                        {{month | capitalize}}
+                    </option>
                 </select>
             </label>
             <label>
@@ -15,18 +17,19 @@
                 <select v-model="quickSelection" @change="quickSelect()">
                     <option value="">-- Sélection rapide --</option>
                     <option v-for="(weekday, index) in weekdays" :key="index" :value="index" @click="">
-                        Tous les {{weekday}} du mois {{index}}
+                        Tous les {{weekday}}s du mois {{index}}
                     </option>
                 </select>
             </label>
         </div>
         <div class="weekdays">
             <div v-for="(weekdayMin, index) in weekdaysMin" :key="index">
-                {{weekdayMin}}
+                {{weekdayMin | capitalize}}
             </div>
         </div>
         <div class="dates">
-            <div v-for="(date, index) in dates" :key="index" :class="{selected: isSelectedDate(date)}"  @click="toggleDateSelection($event, date)" @mouseenter="toggleDateSelection($event, date)">
+            <div v-for="(date, index) in dates" :key="index" :class="{selected: isSelectedDate(date)}"
+                 @click="toggleDateSelection($event, date)" @mouseenter="toggleDateSelection($event, date)">
                 {{date | dayOfMonth}}
             </div>
         </div>
@@ -44,7 +47,13 @@
         props: {},
         filters: {
             dayOfMonth: function (givenDate) {
+                if (!givenDate) return '';
                 return moment(givenDate).format('D');
+            },
+            capitalize: function (value) {
+                if (!value) return '';
+                value = value.toString();
+                return value.charAt(0).toUpperCase() + value.slice(1);
             }
         },
         data: function () {
@@ -89,13 +98,13 @@
         methods: {
             toggleDateSelection: function ($event, givenDate) {
 
-                if($event.type === "mouseenter" && $event.buttons !== 1) {
+                if ($event.type === "mouseenter" && $event.buttons !== 1) {
                     return;
                 }
 
                 let index = this.selectedDates.findIndex((date) => moment(date).isSame(givenDate));
 
-                if(index === -1) {
+                if (index === -1) {
                     this.selectedDates.push(givenDate);
                 } else {
                     this.selectedDates.splice(index, 1);
@@ -106,7 +115,7 @@
             },
             quickSelect: function () {
 
-                if(this.quickSelection === "") {
+                if (this.quickSelection === "") {
                     return;
                 }
 
@@ -116,8 +125,8 @@
                 let to = moment(timeReference).endOf('month');
 
                 for (let currentDate = from; currentDate.isBefore(to) || currentDate.isSame(to); currentDate.add(1, 'days')) {
-                    let dayIndex = (this.quickSelection+1)%7;
-                    if(currentDate.toDate().getDay() === dayIndex && this.selectedDates.findIndex((date) => moment(date).isSame(currentDate)) === -1) {
+                    let dayIndex = (this.quickSelection + 1) % 7;
+                    if (currentDate.toDate().getDay() === dayIndex && this.selectedDates.findIndex((date) => moment(date).isSame(currentDate)) === -1) {
                         this.selectedDates.push(currentDate.toDate());
                     }
                 }
