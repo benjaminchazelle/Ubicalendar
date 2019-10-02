@@ -16,7 +16,7 @@
             <label>
                 <select v-model="quickSelection" @change="quickSelect()">
                     <option value="">-- Sélection rapide --</option>
-                    <option v-for="(weekday, index) in weekdays" :key="index" :value="index" @click="">
+                    <option v-for="(weekday, index) in weekdays" :key="index" :value="index">
                         Tous les {{weekday}}s du mois {{index}}
                     </option>
                 </select>
@@ -28,7 +28,8 @@
             </div>
         </div>
         <div class="dates">
-            <div v-for="(date, index) in dates" :key="index" :class="{selected: isSelectedDate(date), out: isOutOfMonth(date)}"
+            <div v-for="(date, index) in dates" :key="index"
+                 :class="{selected: isSelectedDate(date), out: isOutOfMonth(date)}"
                  @click="toggleDateSelection($event, date)" @mouseenter="toggleDateSelection($event, date)">
                 {{date | dayOfMonth}}<span v-if="isOutOfMonth(date)">/{{date | monthNumber}}</span>
             </div>
@@ -150,9 +151,12 @@
 
 <style scoped>
     .calendar {
+        margin-top:40px;
         width: 400px;
-        border: 1px solid;
         user-select: none;
+        border-radius: 5px;
+        border: 1px solid lightgray;
+        box-shadow: 0 2px 180px 0 rgba(0,0,0,.2);
     }
 
     .header {
@@ -169,6 +173,14 @@
         flex: 1;
         height: 40px;
         line-height: 40px;
+        border: 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .header label:nth-child(2) select {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+
     }
 
     .weekdays, .dates {
@@ -182,17 +194,33 @@
         line-height: 40px;
     }
 
+    .weekdays {
+        font-weight: bold;
+        color: #222;
+    }
+
     .dates {
         flex-wrap: wrap;
     }
 
+    .dates div {
+        transition: 0.2s background;
+    }
+
+    .dates div:hover {
+        background: #ccc;
+    }
     .dates .selected {
         background: deepskyblue;
         color: white;
     }
 
     .dates .out {
-        color: lightgray;
+        color: #bbb;
+    }
+
+    .dates .selected.out {
+        color: white;
     }
 
 
