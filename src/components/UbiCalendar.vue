@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="dates">
-            <div v-for="(date, index) in dates" :key="index">
+            <div v-for="(date, index) in dates" :key="index" :class="{selected: isSelectedDate(date)}"  @click="toggleDateSelection($event, date)" @mouseenter="toggleDateSelection($event, date)">
                 {{date | dayOfMonth}}
             </div>
         </div>
@@ -51,6 +51,8 @@
 
                 months: moment.months(),
                 weekdays: moment.weekdaysMin(true),
+
+                selectedDates: []
             }
         },
         computed: {
@@ -77,6 +79,26 @@
 
                 return dates;
             }
+        },
+        methods: {
+            toggleDateSelection: function ($event, givenDate) {
+
+                if($event.type === "mouseenter" && $event.buttons !== 1) {
+                    return;
+                }
+
+                let index = this.selectedDates.findIndex((date) => moment(date).isSame(givenDate));
+
+                if(index === -1) {
+                    this.selectedDates.push(givenDate);
+                } else {
+                    this.selectedDates.splice(index, 1);
+                }
+            },
+            isSelectedDate: function (givenDate) {
+                return this.selectedDates.findIndex((date) => moment(date).isSame(givenDate)) !== -1;
+            }
+
         }
     }
 </script>
@@ -86,6 +108,7 @@
         width: 400px;
         height: 400px;
         border: 1px solid;
+        user-select: none;
     }
 
     .header {
@@ -117,6 +140,11 @@
 
     .dates {
         flex-wrap: wrap;
+    }
+
+    .dates .selected {
+        background: deepskyblue;
+        color: white;
     }
 
 
