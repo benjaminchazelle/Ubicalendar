@@ -16,7 +16,7 @@
             <label>
                 <select v-model="quickSelection" @change="quickSelect()">
                     <option value="">-- Sélection rapide --</option>
-                    <option value="reset">Tout déselectionner</option>
+                    <option value="reset">Tout désélectionner</option>
                     <option v-for="(weekday, index) in weekdays" :key="index" :value="index">
                         Tous les {{weekday}}s du mois
                     </option>
