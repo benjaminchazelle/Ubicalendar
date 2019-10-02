@@ -18,7 +18,7 @@
                     <option value="">-- Sélection rapide --</option>
                     <option value="reset">Tout déselectionner</option>
                     <option v-for="(weekday, index) in weekdays" :key="index" :value="index">
-                        Tous les {{weekday}}s du mois {{index}}
+                        Tous les {{weekday}}s du mois
                     </option>
                 </select>
             </label>
