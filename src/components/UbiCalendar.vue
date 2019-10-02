@@ -2,14 +2,13 @@
     <div class="calendar">
         <div class="header">
             <label>
-                <select>
-                    <option>mois</option>
+                <select v-model="currentMonth">
+                    <option v-for="(month, index) in months" :key="index" :value="index">{{month}}</option>
                 </select>
-                {{ currentMonth }}
             </label>
             <label>
-                <select>
-                    <option>années</option>
+                <select v-model="currentYear">
+                    <option v-for="(year, index) in years" :key="index" :value="year">{{year}}</option>
                 </select>
             </label>
             <label>
@@ -59,8 +58,22 @@
         props: {},
         data: function () {
             return {
-                currentMonth: 9,
-                currentYear: 2019
+                currentMonth: 9, //TODO: rendre dynamique
+                currentYear: 2019,
+
+                months: moment.months(),
+                weekdays: moment.weekdays(),
+            }
+        },
+        computed: {
+            years: function () {
+                let years = [];
+                let from = new Date().getFullYear() - 10;
+                let to = new Date().getFullYear() + 10;
+                for(let year = from; year <= to; year++) {
+                    years.push(year);
+                }
+                return years;
             }
         }
     }
