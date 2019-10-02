@@ -1,15 +1,21 @@
 <template>
     <div class="calendar">
         <div class="header">
-            <select>
-                <option>mois</option>
-            </select>
-            <select>
-                <option>années</option>
-            </select>
-            <select>
-                <option>actions</option>
-            </select>
+            <label>
+                <select>
+                    <option>mois</option>
+                </select>
+            </label>
+            <label>
+                <select>
+                    <option>années</option>
+                </select>
+            </label>
+            <label>
+                <select>
+                    <option>actions</option>
+                </select>
+            </label>
         </div>
         <div class="weekdays">
             <div>Lu</div>
@@ -58,6 +64,11 @@
     .header {
         display: flex;
         width: 100%;
+    }
+
+    .header label {
+        flex: 1;
+        display: flex;
     }
 
     .header select {
